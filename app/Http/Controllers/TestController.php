@@ -2,34 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\TestGetRequest;
+use App\Http\Requests\TestPostRequest;
 
 class TestController extends Controller
 {
-    public function testGet(Request $request)
+    public function testGet(TestGetRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'nullable|string|min:2|max:50',
-            'age'  => 'nullable|integer|min:18|max:99',
-        ]);
+        $validated = $request->validated();
 
         return response()->json([
-            'success' => true,
-            'method' => 'GET',
+            'success'  => true,
+            'method'   => 'GET',
             'received' => $validated
         ]);
     }
 
-    public function testPost(Request $request)
+    public function testPost(TestPostRequest $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'event' => 'required|in:PageView,Lead,Purchase',
-        ]);
+        $validated = $request->validated();
 
         return response()->json([
-            'success' => true,
-            'method' => 'POST',
+            'success'  => true,
+            'method'   => 'POST',
             'received' => $validated
         ]);
     }
