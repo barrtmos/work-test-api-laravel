@@ -11,8 +11,9 @@ class CheckApiKey
     public function handle(Request $request, Closure $next): Response
     {
         $apiKey = $request->header('X-API-KEY');
+        $validKey = config('app.api_key');
 
-        if ($apiKey !== config('app.api_key')) {
+        if (!$apiKey || !$validKey || $apiKey !== $validKey) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
