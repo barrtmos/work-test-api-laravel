@@ -38,10 +38,10 @@
 
     <form method="POST" action="/lead-form">
         @csrf
-        <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}"></p>
-        <p>Last Name: <input type="text" name="last_name" value="{{ old('last_name') }}"></p>
-        <p>Email: <input type="text" name="email" value="{{ old('email') }}"></p>
-        <p>Phone: <input type="text" name="phone_number" value="{{ old('phone_number') }}"></p>
+        <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
+        <p>Last Name: <input type="text" name="last_name" value="{{ old('last_name') }}" required></p>
+        <p>Email: <input type="text" name="email" value="{{ old('email') }}" required></p>
+        <p>Phone: <input type="text" name="phone_number" value="{{ old('phone_number') }}" required></p>
         <button type="submit">Send</button>
     </form>
 

@@ -17,7 +17,7 @@ class LeadFormController extends Controller
         $response = Http::withHeaders([
             'X-API-KEY' => config('app.api_key'),
             'Accept'    => 'application/json',
-        ])->post('http://localhost:8080/api/lead', [
+        ])->post(config('app.api_base_url') . '/api/lead', [
             'first_name'   => $request->input('first_name'),
             'last_name'    => $request->input('last_name'),
             'email'        => $request->input('email'),
