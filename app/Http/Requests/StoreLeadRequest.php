@@ -20,6 +20,7 @@ class StoreLeadRequest extends FormRequest
             'phone_number' => 'required|string|min:7|max:20',
             'ip_address'   => 'required|ip',
             'user_agent'   => 'required|string|min:5|max:255',
+            'query_params' => 'nullable|string',
         ];
     }
 }

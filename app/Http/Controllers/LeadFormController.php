@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Http;
 
 class LeadFormController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        return view('lead-form');
+        return view('lead-form', [
+            'queryParams' => $request->query(),
+        ]);
     }
 
     public function submit(Request $request)
@@ -24,6 +26,7 @@ class LeadFormController extends Controller
             'phone_number' => $request->input('phone_number'),
             'ip_address'   => $request->ip(),
             'user_agent'   => $request->userAgent(),
+            'query_params' => $request->input('query_params'),
         ]);
 
         if ($response->status() === 201) {

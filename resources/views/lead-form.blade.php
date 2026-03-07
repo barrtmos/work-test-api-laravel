@@ -38,6 +38,11 @@
 
     <form method="POST" action="/lead-form">
         @csrf
+        <input
+            type="hidden"
+            name="query_params"
+            value="{{ old('query_params', !empty($queryParams ?? []) ? json_encode($queryParams, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '') }}"
+        >
         <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
         <p>Last Name: <input type="text" name="last_name" value="{{ old('last_name') }}" required></p>
         <p>Email: <input type="text" name="email" value="{{ old('email') }}" required></p>
