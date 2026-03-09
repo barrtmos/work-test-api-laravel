@@ -11,9 +11,28 @@
         .success { color: #a6e3a1; }
         .error { color: #f38ba8; }
     </style>
+
+    <!-- Facebook Pixel Base Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '123456789012345');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=123456789012345&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Base Code -->
+
 </head>
 <body>
-
     <h1>Send Lead</h1>
 
     @if(isset($success))
@@ -38,17 +57,22 @@
 
     <form method="POST" action="/lead-form">
         @csrf
-        <input
-            type="hidden"
-            name="query_params"
-            value="{{ old('query_params', !empty($queryParams ?? []) ? json_encode($queryParams, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '') }}"
+        <input type="hidden" name="query_params"
+               value="{{ old('query_params', !empty($queryParams ?? []) ? json_encode($queryParams, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '') }}"
         >
         <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
-        <p>Last Name: <input type="text" name="last_name" value="{{ old('last_name') }}" required></p>
-        <p>Email: <input type="text" name="email" value="{{ old('email') }}" required></p>
-        <p>Phone: <input type="text" name="phone_number" value="{{ old('phone_number') }}" required></p>
+        <p>Last Name:  <input type="text" name="last_name"  value="{{ old('last_name') }}"  required></p>
+        <p>Email:      <input type="text" name="email"      value="{{ old('email') }}"      required></p>
+        <p>Phone:      <input type="text" name="phone_number" value="{{ old('phone_number') }}" required></p>
         <button type="submit">Send</button>
     </form>
+
+    <!-- Facebook Pixel Lead Event (only on success) -->
+    @if(isset($success))
+        <script>
+            fbq('track', 'Lead');
+        </script>
+    @endif
 
 </body>
 </html>
