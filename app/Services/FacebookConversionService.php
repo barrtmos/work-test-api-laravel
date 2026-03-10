@@ -42,6 +42,17 @@ class FacebookConversionService
             'payload' => $eventData,
             'url' => "https://graph.facebook.com/v21.0/{$this->pixelId}/events"
         ]);
+
+        $response = Http::post(
+            "https://graph.facebook.com/v21.0/{$this->pixelId}/events",
+        $eventData
+        );
+
+        Log::info('Facebook CAPI - Response', [
+            'event_id' => $eventId,
+            'status'   => $response->status(),
+            'body'     => $response->json(),
+        ]);
     }
 
     private function prepareUserData(array $leadData): array
