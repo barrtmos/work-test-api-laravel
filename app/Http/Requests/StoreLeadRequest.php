@@ -21,6 +21,7 @@ class StoreLeadRequest extends FormRequest
             'ip_address'   => 'required|ip',
             'user_agent'   => 'required|string|min:5|max:255',
             'query_params' => 'nullable|string',
+            'event_id'     => 'nullable|string|max:100',
         ];
     }
 }

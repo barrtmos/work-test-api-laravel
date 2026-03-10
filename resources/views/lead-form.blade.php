@@ -29,7 +29,6 @@
         <img height="1" width="1" style="display:none"
              src="https://www.facebook.com/tr?id=123456789012345&ev=PageView&noscript=1"/>
     </noscript>
-    <!-- End Facebook Pixel Base Code -->
 
 </head>
 <body>
@@ -57,6 +56,7 @@
 
     <form method="POST" action="/lead-form">
         @csrf
+        <input type="hidden" name="event_id" value="{{ $eventId }}">
         <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
         <p>Last Name:  <input type="text" name="last_name"  value="{{ old('last_name') }}"  required></p>
         <p>Email:      <input type="text" name="email"      value="{{ old('email') }}"      required></p>
@@ -64,10 +64,9 @@
         <button type="submit">Send</button>
     </form>
 
-    <!-- Facebook Pixel Lead Event (only on success) -->
     @if(isset($success))
         <script>
-            fbq('track', 'Lead');
+            fbq('track', 'Lead', {}, {eventID: '{{ $eventId }}'});
         </script>
     @endif
 
