@@ -10,17 +10,17 @@ class LeadFormController extends Controller
 {
     public function show(Request $request)
     {
-        $request->session()->put('query_params', $request->query());
+        session(['query_params' => $request->query()]);
 
         $eventId = 'lead_' . time() . '_' . Str::random(8);
-        $request->session()->put('event_id', $eventId);
+        session(['event_id' => $eventId]);
 
     return view('lead-form', ['eventId' => $eventId]);
     }
 
     public function submit(Request $request)
     {
-        $eventId = $request->session()->get('event_id');
+        $eventId = session('event_id');
         $apiBase = config('app.api_base_url') ?: $request->getSchemeAndHttpHost();
         $response = Http::withHeaders([
             'X-API-KEY' => config('app.api_key'),
@@ -32,7 +32,7 @@ class LeadFormController extends Controller
             'phone_number' => $request->input('phone_number'),
             'ip_address'   => $request->ip(),
             'user_agent'   => $request->userAgent(),
-            'query_params' => json_encode($request->session()->get('query_params')),
+            'query_params' => json_encode(session('query_params')),
             'event_id'     => $eventId,
         ]);
 
