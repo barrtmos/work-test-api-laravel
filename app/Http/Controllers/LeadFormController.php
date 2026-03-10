@@ -9,9 +9,9 @@ class LeadFormController extends Controller
 {
     public function show(Request $request)
     {
-        return view('lead-form', [
-            'queryParams' => $request->query(),
-        ]);
+        $request->session()->put('query_params', $request->query());
+
+        return view('lead-form');
     }
 
     public function submit(Request $request)
@@ -27,7 +27,7 @@ class LeadFormController extends Controller
             'phone_number' => $request->input('phone_number'),
             'ip_address'   => $request->ip(),
             'user_agent'   => $request->userAgent(),
-            'query_params' => $request->input('query_params'),
+            'query_params' => json_encode($request->session()->get('query_params')),
         ]);
 
         if ($response->status() === 201) {
