@@ -50,7 +50,7 @@ php -r "file_exists('database/database.sqlite') || touch('database/database.sqli
 DB_CONNECTION=sqlite
 APP_URL=http://127.0.0.1:8000
 API_KEY=test123
-API_BASE_URL=http://127.0.0.1:8000
+API_BASE_URL=http://127.0.0.1:8080
 ```
 Зачем:
 - `API_KEY` нужен для доступа к API (`X-API-KEY`).
