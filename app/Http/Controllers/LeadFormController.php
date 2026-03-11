@@ -15,7 +15,11 @@ class LeadFormController extends Controller
         $eventId = 'lead_' . time() . '_' . Str::random(8);
         session(['event_id' => $eventId]);
 
-    return view('lead-form', ['eventId' => $eventId]);
+    return view('lead-form', [
+        'eventId'   => $eventId,
+        'ipAddress' => $request->ip(),
+        'userAgent' => $request->userAgent(),
+    ]);
     }
 
     public function submit(Request $request)

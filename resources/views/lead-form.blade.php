@@ -8,6 +8,7 @@
         input { width: 100%; padding: 8px; margin: 5px 0 15px; border: 1px solid #45475a; border-radius: 4px; box-sizing: border-box; background: #313244; color: #cdd6f4; }
         button { background: #89b4fa; color: #1e1e2e; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
         button:hover { background: #74c7ec; }
+        button:disabled { background: #45475a; cursor: not-allowed; }
         .success { color: #a6e3a1; }
         .error { color: #f38ba8; }
     </style>
@@ -29,46 +30,66 @@
         <img height="1" width="1" style="display:none"
              src="https://www.facebook.com/tr?id={{ config('services.facebook.pixel_id') }}&ev=PageView&noscript=1"/>
     </noscript>
-
 </head>
 <body>
     <h1>Send Lead</h1>
 
-    @if(isset($success))
-        <p class="success">Lead sent successfully! Lead ID: {{ $leadId }}</p>
-    @endif
+    <div id="message"></div>
 
-    @if(isset($authError))
-        <p class="error">Authorization failed. API key missing/invalid.</p>
-    @endif
-
-    @if(isset($serverError))
-        <p class="error">Server error: {{ $serverError }}</p>
-    @endif
-
-    @if($errors->any())
-        <ul class="error">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    <form method="POST" action="/lead-form">
-        @csrf
-        <input type="hidden" name="event_id" value="{{ $eventId }}">
-        <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
-        <p>Last Name:  <input type="text" name="last_name"  value="{{ old('last_name') }}"  required></p>
-        <p>Email:      <input type="text" name="email"      value="{{ old('email') }}"      required></p>
-        <p>Phone:      <input type="text" name="phone_number" value="{{ old('phone_number') }}" required></p>
-        <button type="submit">Send</button>
+    <form id="leadForm">
+        <input type="hidden" id="event_id"   value="{{ $eventId }}">
+        <input type="hidden" id="ip_address" value="{{ $ipAddress }}">
+        <input type="hidden" id="user_agent" value="{{ $userAgent }}">
+        <p>First Name: <input type="text" id="first_name" required></p>
+        <p>Last Name:  <input type="text" id="last_name"  required></p>
+        <p>Email:      <input type="text" id="email"      required></p>
+        <p>Phone:      <input type="text" id="phone_number" required></p>
+        <button type="submit" id="submitBtn">Send</button>
     </form>
 
-    @if(isset($success))
-        <script>
-            fbq('track', 'Lead', {}, {eventID: '{{ $eventId }}'});
-        </script>
-    @endif
+    <script>
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
+            const eventId = document.getElementById('event_id').value;
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('message');
+
+            btn.disabled = true;
+
+            fetch('/api/lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    first_name:   document.getElementById('first_name').value,
+                    last_name:    document.getElementById('last_name').value,
+                    email:        document.getElementById('email').value,
+                    phone_number: document.getElementById('phone_number').value,
+                    ip_address:   document.getElementById('ip_address').value,
+                    user_agent:   document.getElementById('user_agent').value,
+                    event_id:     eventId,
+                })
+            })
+            .then(r => r.json().then(data => ({ status: r.status, data })))
+            .then(({ status, data }) => {
+                if (status === 201) {
+                    msg.innerHTML = '<p class="success">Lead sent! ID: ' + data.lead_id + '</p>';
+                    document.getElementById('leadForm').style.display = 'none';
+                    fbq('track', 'Lead', {}, { eventID: eventId });
+                } else if (status === 422) {
+                    const errs = Object.values(data.errors).flat().join('<br>');
+                    msg.innerHTML = '<p class="error">' + errs + '</p>';
+                    btn.disabled = false;
+                } else {
+                    msg.innerHTML = '<p class="error">Something went wrong. Please try again.</p>';
+                    btn.disabled = false;
+                }
+            })
+            .catch(() => {
+                msg.innerHTML = '<p class="error">Network error. Please try again.</p>';
+                btn.disabled = false;
+            });
+        });
+    </script>
 </body>
 </html>
