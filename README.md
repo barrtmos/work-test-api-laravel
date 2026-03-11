@@ -85,8 +85,8 @@ php artisan serve --host=127.0.0.1 --port=8000
 - Query-параметры (`utm_*`, `click_id` и т.п.) сохраняются в `leads.query_params`.
 - В форме подключен Facebook Pixel base code (`PageView`).
 - После успешной отправки формы в браузере вызывается `fbq('track', 'Lead', ..., { eventID })`.
-- На сервере после успешного сохранения лида формируется CAPI payload `Lead` с тем же `event_id`.
-- CAPI payload логируется в `storage/logs/laravel.log` (режим подготовки/тестовой интеграции).
+- На сервере после успешного сохранения лида формируется CAPI payload `Lead` с тем же `event_id` и отправляется в Meta Conversions API.
+- В лог пишутся и исходящий payload (`Facebook CAPI - Lead Event`), и ответ Meta (`Facebook CAPI - Response`).
 
 ## 8) Быстрая проверка
 Открой:
@@ -104,7 +104,9 @@ App\Models\Lead::latest()->first();
 ```bash
 tail -f storage/logs/laravel.log
 ```
-Ожидаемо в логе появится `Facebook CAPI - Lead Event` с `event_id`, `user_data`, `test_event_code`.
+Ожидаемо в логе появятся:
+- `Facebook CAPI - Lead Event` с `event_id`, `user_data`, `test_event_code`
+- `Facebook CAPI - Response` со `status` и `body`
 
 ## 9) Полезно знать
 - Если меняешь порт API, обнови `API_BASE_URL`.
