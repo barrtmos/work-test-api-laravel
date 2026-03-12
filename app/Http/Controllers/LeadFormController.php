@@ -15,7 +15,7 @@ class LeadFormController extends Controller
         $eventId = 'lead_' . time() . '_' . Str::random(8);
         session(['event_id' => $eventId]);
 
-    return view('lead-form', ['eventId' => $eventId]);
+        return view('lead-form', ['eventId' => $eventId]);
     }
 
     public function submit(Request $request)
@@ -56,7 +56,7 @@ class LeadFormController extends Controller
         }
 
         return view('lead-form', [
-            'serverError' => $response->status() . ' ' . $response->json('message'),
+            'serverError' => $response->status() . ' ' . ($response->json('message') ?? 'Server error'),
             'eventId' => $eventId,
         ]);
     }

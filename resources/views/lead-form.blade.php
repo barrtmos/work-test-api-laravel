@@ -11,6 +11,7 @@
         .success { color: #a6e3a1; }
         .error { color: #f38ba8; }
     </style>
+    @livewireStyles
 
     <!-- Facebook Pixel Base Code -->
     <script>
@@ -32,43 +33,7 @@
 
 </head>
 <body>
-    <h1>Send Lead</h1>
-
-    @if(isset($success))
-        <p class="success">Lead sent successfully! Lead ID: {{ $leadId }}</p>
-    @endif
-
-    @if(isset($authError))
-        <p class="error">Authorization failed. API key missing/invalid.</p>
-    @endif
-
-    @if(isset($serverError))
-        <p class="error">Server error: {{ $serverError }}</p>
-    @endif
-
-    @if($errors->any())
-        <ul class="error">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    <form method="POST" action="/lead-form">
-        @csrf
-        <input type="hidden" name="event_id" value="{{ $eventId }}">
-        <p>First Name: <input type="text" name="first_name" value="{{ old('first_name') }}" required></p>
-        <p>Last Name:  <input type="text" name="last_name"  value="{{ old('last_name') }}"  required></p>
-        <p>Email:      <input type="text" name="email"      value="{{ old('email') }}"      required></p>
-        <p>Phone:      <input type="text" name="phone_number" value="{{ old('phone_number') }}" required></p>
-        <button type="submit">Send</button>
-    </form>
-
-    @if(isset($success))
-        <script>
-            fbq('track', 'Lead', {}, {eventID: '{{ $eventId }}'});
-        </script>
-    @endif
-
+    <livewire:lead-form />
+    @livewireScripts
 </body>
 </html>

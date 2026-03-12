@@ -7,5 +7,6 @@ use App\Http\Controllers\LeadController;
 Route::middleware(\App\Http\Middleware\CheckApiKey::class)->group(function () {
     Route::get('/test-get', [TestController::class, 'testGet']);
     Route::post('/test-post', [TestController::class, 'testPost']);
-    Route::post('/lead', [LeadController::class, 'store']);
 });
+
+Route::post('/lead', [LeadController::class, 'store']);
