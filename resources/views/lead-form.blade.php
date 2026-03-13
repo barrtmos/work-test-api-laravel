@@ -12,6 +12,11 @@
         .error { color: #f38ba8; }
     </style>
     @livewireStyles
+    <script>
+        window.addEventListener('lead-submitted', (e) => {
+            fbq('track', 'Lead', {}, { eventID: e.detail.eventId });
+        });
+    </script>
 
     <!-- Facebook Pixel Base Code -->
     <script>

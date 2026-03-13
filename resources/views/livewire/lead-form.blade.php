@@ -51,9 +51,4 @@
         </form>
     @endif
 
-    @if($success)
-        <script>
-            fbq('track', 'Lead', {}, {eventID: '{{ $eventId }}'});
-        </script>
-    @endif
 </div>

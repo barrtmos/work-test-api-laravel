@@ -65,6 +65,7 @@ class LeadForm extends Component
         if ($response->status() === 201) {
             $this->success = true;
             $this->leadId = $response->json('lead_id');
+            $this->dispatch('lead-submitted', eventId: $this->eventId);
 
             return;
         }
